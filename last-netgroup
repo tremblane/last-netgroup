@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+	echo "Missing netgroup name (e.g. 'sjc-labs', 'rtp-desktops')"
+	exit
+fi
+
+PARENT_GROUP=$1
+
+GS_GROUP=`netcheck -g $PARENT_GROUP | tail +4 | sed '/^$/d' | awk '{print $2}' | sed 's/^.*-gs\(.*\)/\1/' | sort -n | sed s/^/$PARENT_GROUP-gs/ | tail -1`
+
+echo $GS_GROUP
+
+S_GROUP=`netcheck -g $GS_GROUP | tail +4 | sed '/^$/d' | awk '{print $2}' | sed 's/^.*-s\(.*\)/\1/' | sort -n | sed s/^/$PARENT_GROUP-s/ | tail -1`
+
+echo $S_GROUP
